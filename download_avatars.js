@@ -10,25 +10,48 @@ console.log('Welcome to the GitHub Avatar Downloader!');
 
 function getRepoContributors(repoOwner, repoName, cb) {
   // ...
-var requestURL = {
-  url: 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
-  headers: {
-    'User-Agent': 'GIF Avatar'
-  }
-};
+  var requestURL = {
+    url: 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
+    headers: {
+      'User-Agent': 'GIF Avatar'
+    }
+  };
 
-request.get(requestURL)
-      .on('error', function(err){
-        throw err;
-      })
-      .on('response', function(response) {
-        console.log('Response status code: ', response.statusCode);
-      })
-      .pipe(fs.createWriteStream('./downloaded.jpg'))
+  request(requestURL, function(error, response, body) {
+    if (error) {
+      console.log("Got error: ", error)
+      return
+    }
 
-}
+    var json = JSON.parse(body)
+    cb(json)
 
+    for(i of json) {
+    var avatar = i.avatar_url
+    console.log("Avatar URL: ", avatar);
+    }
+    })
+  };
 
+// request.get(requestURL)
+//       .on('error', function(err){
+//         throw err;
+//       })
+//       .on('response', function(response) {
+//         console.log('Response status code: ', response.statusCode);
+//           if (response.statusCode == 200) {
+//             console.log(response)
+
+//         }
+
+//           var json = JSON.parse(response)
+//           console.log("avatar")
+//           var avatar = json.avatar_url
+//           callback(json)
+//       })
+//       .pipe(fs.createWriteStream('./downloaded.html'))
+
+// }
 
 
 getRepoContributors("jquery", "jquery", function(err, result) {
