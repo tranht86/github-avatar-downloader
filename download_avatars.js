@@ -24,16 +24,18 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
 
     var json = JSON.parse(body)
-    cb(json)
 
-    for(i of json) {
-    var avatar = i.avatar_url
-    console.log("Avatar URL: ", avatar);
-    downloadImageByURL(avatar, i.login)
-
+    if (response.statusCode === 200) {
+      for(i of json) {
+        var avatar = i.avatar_url
+        console.log("Avatar URL: ", avatar);
+        downloadImageByURL(avatar, i.login)
+      }
+    } else {
+      console.log('not found!')
     }
-    })
-  };
+  })
+};
 
 function downloadImageByURL(url, filePath) {
 
@@ -41,7 +43,13 @@ function downloadImageByURL(url, filePath) {
 }
 
 
-getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
-  console.log("Result:", result);
-});
+var owner = process.argv[2]
+var repo = process.argv[3]
+
+if (owner === undefined || repo === undefined) {
+  console.log("Please enter in format node download_avatars.js <owner> <repo>")
+} else {
+  getRepoContributors(owner, repo, function(err, result) {
+    console.log("Result:", result);
+  });
+}
