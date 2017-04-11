@@ -29,29 +29,16 @@ function getRepoContributors(repoOwner, repoName, cb) {
     for(i of json) {
     var avatar = i.avatar_url
     console.log("Avatar URL: ", avatar);
+    downloadImageByURL(avatar, i.login)
+
     }
     })
   };
 
-// request.get(requestURL)
-//       .on('error', function(err){
-//         throw err;
-//       })
-//       .on('response', function(response) {
-//         console.log('Response status code: ', response.statusCode);
-//           if (response.statusCode == 200) {
-//             console.log(response)
+function downloadImageByURL(url, filePath) {
 
-//         }
-
-//           var json = JSON.parse(response)
-//           console.log("avatar")
-//           var avatar = json.avatar_url
-//           callback(json)
-//       })
-//       .pipe(fs.createWriteStream('./downloaded.html'))
-
-// }
+  request(url).pipe(fs.createWriteStream('./avatars/' + filePath +'.jpg'))
+}
 
 
 getRepoContributors("jquery", "jquery", function(err, result) {
